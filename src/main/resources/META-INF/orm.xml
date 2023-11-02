@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+                 version="2.0">
+
+    <entity class="dal.entity.Shoe">
+        <table name="shoes"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="brand"/>
+            <basic name="model"/>
+            <basic name="size"/>
+            <basic name="stock"/>
+            <many-to-one name="warehouse" fetch="EAGER">
+                <join-column name="warehouse_id" nullable="false"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="dal.entity.Warehouse">
+        <table name="warehouses"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="name"/>
+            <basic name="location"/>
+        </attributes>
+    </entity>
+</entity-mappings>

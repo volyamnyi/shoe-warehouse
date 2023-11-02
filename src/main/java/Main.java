@@ -1,8 +1,8 @@
-import dal.dao.DatabaseConnection;
 import dal.dao.ShoeDao;
 import dal.dao.WarehouseDao;
-import dal.model.Shoe;
-import dal.model.Warehouse;
+import dal.entity.Shoe;
+import dal.entity.Warehouse;
+import dal.utils.DatabaseConnection;
 import dal.utils.MyBatisScriptUtility;
 
 import java.util.List;
@@ -18,25 +18,28 @@ public class Main {
     private static void shoesCrud() {
         ShoeDao shoeDao = new ShoeDao();
 
-        int shoeId = 5;
+        long shoeId = 5;
+        long warehouseId = 3;
+
         Shoe shoeById = shoeDao.getShoeById(shoeId);
         if (shoeById != null)
             System.out.println("Shoe with id " + shoeId + " " + shoeById);
         else
             System.out.println("Shoe with id " + shoeId + " not found");
 
-        printAllShoes(shoeDao);
-
         Shoe newShoe = Shoe.builder()
                 .brand("Nike NEW")
                 .model("Fresh Foam NEW")
                 .size(38)
                 .stock(145)
+                .warehouse(Warehouse
+                        .builder()
+                        .id(warehouseId)
+                        .build())
                 .build();
-
-        shoeDao.addShoe(newShoe);
-        System.out.println("\nNew shoe with model " + newShoe.getModel() + " has been added");
+        shoeDao.addNewShoe(newShoe);
         printAllShoes(shoeDao);
+        System.out.println("\nNew shoe with model " + newShoe.getModel() + " with warehouse id " + warehouseId + " has been added");
 
 
         Shoe updatedShoe = Shoe.builder()
@@ -44,19 +47,21 @@ public class Main {
                 .model("Fresh Foam UPDATED")
                 .size(35)
                 .stock(143)
+                .warehouse(Warehouse.builder().id(5L).build())
                 .build();
 
-        System.out.println("\nShoe with id " + shoeId + " has been updated");
+
         shoeDao.updateShoeById(updatedShoe, shoeId);
         printAllShoes(shoeDao);
+        System.out.println("\nShoe with id " + shoeId + " has been updated");
 
         shoeDao.deleteShoeById(shoeId);
-        System.out.println("\nShoe with id " + shoeId + " has been deleted");
         printAllShoes(shoeDao);
+        System.out.println("\nShoe with id " + shoeId + " has been deleted");
 
         shoeDao.deleteAllShoes();
-        System.out.println("\nAll shoes have been deleted");
         printAllShoes(shoeDao);
+        System.out.println("\nAll shoes have been deleted");
 
     }
 
@@ -65,21 +70,22 @@ public class Main {
 
         int warehouseId = 5;
         Warehouse warehouseById = warehouseDao.getWarehouseById(warehouseId);
+
+
+        printAllWarehouses(warehouseDao);
         if (warehouseById != null)
             System.out.println("Warehouse with id " + warehouseId + " " + warehouseById);
         else
             System.out.println("Warehouse with id " + warehouseId + " not found");
-
-        printAllWarehouses(warehouseDao);
 
         Warehouse newWarehouse = Warehouse.builder()
                 .name("Rippin Wilderman and Predovic NEW")
                 .location("268 Green Ridge Terrace NEW")
                 .build();
 
-        warehouseDao.addWarehouse(newWarehouse);
-        System.out.println("\nNew warehouse with name " + newWarehouse.getName() + " has been added");
+        warehouseDao.addNewWarehouse(newWarehouse);
         printAllWarehouses(warehouseDao);
+        System.out.println("\nNew warehouse with name " + newWarehouse.getName() + " has been added");
 
 
         Warehouse updatedWarehouse = Warehouse.builder()
@@ -88,16 +94,16 @@ public class Main {
                 .build();
 
         warehouseDao.updateWarehouseById(updatedWarehouse, warehouseId);
-        System.out.println("\nWarehouse with id " + warehouseId + " has been updated");
         printAllWarehouses(warehouseDao);
+        System.out.println("\nWarehouse with id " + warehouseId + " has been updated");
 
         warehouseDao.deleteWarehouseById(warehouseId);
-        System.out.println("\nWarehouse with id " + warehouseId + " has been deleted");
         printAllWarehouses(warehouseDao);
+        System.out.println("\nWarehouse with id " + warehouseId + " has been deleted");
 
         warehouseDao.deleteAllWarehouses();
-        System.out.println("\nAll warehouses have been deleted");
         printAllWarehouses(warehouseDao);
+        System.out.println("\nAll warehouses have been deleted");
     }
 
     private static void printAllShoes(ShoeDao shoeDao) {
